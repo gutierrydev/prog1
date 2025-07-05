@@ -1,20 +1,45 @@
-const promptSync = require("prompt-sync");
+import inquirer from "inquirer";
 import { somar, subtrair, multiplicar, dividir } from "./calc";
 
-function main() {
-  const prompt = promptSync();
+async function main() {
+  let continuar = true;
 
-  let continuar = "s";
-  while (continuar.toLowerCase() === "s") {
-    console.log("Escolha a operação:");
-    console.log("1 - Somar");
-    console.log("2 - Subtrair");
-    console.log("3 - Multiplicar");
-    console.log("4 - Dividir");
+  while (continuar) {
+    const { opcao } = await inquirer.prompt([
+      {
+        type: "list",
+        name: "opcao",
+        message: "Escolha a operação:",
+        choices: [
+          { name: "Somar", value: "1" },
+          { name: "Subtrair", value: "2" },
+          { name: "Multiplicar", value: "3" },
+          { name: "Dividir", value: "4" },
+        ],
+      },
+    ]);
 
-    const opcao = prompt("Digite o número da operação desejada: ");
-    const a = Number(prompt("Digite o primeiro número: "));
-    const b = Number(prompt("Digite o segundo número: "));
+    const { a } = await inquirer.prompt([
+      {
+        type: "input",
+        name: "a",
+        message: "Digite o primeiro número:",
+        validate: (input) =>
+          !isNaN(Number(input)) || "Digite um número válido.",
+        filter: (input) => Number(input),
+      },
+    ]);
+
+    const { b } = await inquirer.prompt([
+      {
+        type: "input",
+        name: "b",
+        message: "Digite o segundo número:",
+        validate: (input) =>
+          !isNaN(Number(input)) || "Digite um número válido.",
+        filter: (input) => Number(input),
+      },
+    ]);
 
     let resultado: number;
 
@@ -43,7 +68,19 @@ function main() {
         console.log("Opção inválida.");
     }
 
-    continuar = prompt("Deseja fazer outra operação? (s/n): ");
+    const { continuarResp } = await inquirer.prompt([
+      {
+        type: "list",
+        name: "continuarResp",
+        message: "Deseja fazer outra operação?",
+        choices: [
+          { name: "Sim", value: true },
+          { name: "Não", value: false },
+        ],
+        default: 0,
+      },
+    ]);
+    continuar = continuarResp;
     console.log(); // Linha em branco para separar as execuções
   }
   console.log("Calculadora encerrada.");

@@ -15,6 +15,7 @@
   "type": "commonjs",
   "description": "",
   "dependencies": {
+    "inquirer": "^12.7.0",
     "prompt-sync": "^4.2.0",
     "typescript": "^5.8.3"
   },
