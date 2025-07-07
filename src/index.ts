@@ -1,5 +1,14 @@
 import inquirer from "inquirer";
-import { somar, subtrair, multiplicar, dividir } from "./calc";
+import {
+  somar,
+  subtrair,
+  multiplicar,
+  dividir,
+  potencia,
+  raiz,
+  modulo,
+  fatorial,
+} from "./calc";
 
 async function main() {
   let continuar = true;
@@ -15,33 +24,51 @@ async function main() {
           { name: "Subtrair", value: "2" },
           { name: "Multiplicar", value: "3" },
           { name: "Dividir", value: "4" },
+          { name: "Potência", value: "5" },
+          { name: "Raiz Quadrada", value: "6" },
+          { name: "Módulo", value: "7" },
+          { name: "Fatorial", value: "8" },
         ],
       },
     ]);
 
-    const { a } = await inquirer.prompt([
-      {
-        type: "input",
-        name: "a",
-        message: "Digite o primeiro número:",
-        validate: (input) =>
-          !isNaN(Number(input)) || "Digite um número válido.",
-        filter: (input) => Number(input),
-      },
-    ]);
+    let a: number = 0,
+      b: number = 0,
+      resultado: number;
 
-    const { b } = await inquirer.prompt([
-      {
-        type: "input",
-        name: "b",
-        message: "Digite o segundo número:",
-        validate: (input) =>
-          !isNaN(Number(input)) || "Digite um número válido.",
-        filter: (input) => Number(input),
-      },
-    ]);
-
-    let resultado: number;
+    if (["1", "2", "3", "4", "5", "7"].includes(opcao)) {
+      ({ a } = await inquirer.prompt([
+        {
+          type: "input",
+          name: "a",
+          message: "Digite o primeiro número:",
+          validate: (input) =>
+            !isNaN(Number(input)) || "Digite um número válido.",
+          filter: (input) => Number(input),
+        },
+      ]));
+      ({ b } = await inquirer.prompt([
+        {
+          type: "input",
+          name: "b",
+          message: "Digite o segundo número:",
+          validate: (input) =>
+            !isNaN(Number(input)) || "Digite um número válido.",
+          filter: (input) => Number(input),
+        },
+      ]));
+    } else if (["6", "8"].includes(opcao)) {
+      ({ a } = await inquirer.prompt([
+        {
+          type: "input",
+          name: "a",
+          message: "Digite o número:",
+          validate: (input) =>
+            !isNaN(Number(input)) || "Digite um número válido.",
+          filter: (input) => Number(input),
+        },
+      ]));
+    }
 
     switch (opcao) {
       case "1":
@@ -64,6 +91,30 @@ async function main() {
           console.log(`Erro: ${e.message}`);
         }
         break;
+      case "5":
+        resultado = potencia(a, b);
+        console.log(`Resultado: ${resultado}`);
+        break;
+      case "6":
+        try {
+          resultado = raiz(a);
+          console.log(`Resultado: ${resultado}`);
+        } catch (e: any) {
+          console.log(`Erro: ${e.message}`);
+        }
+        break;
+      case "7":
+        resultado = modulo(a, b);
+        console.log(`Resultado: ${resultado}`);
+        break;
+      case "8":
+        try {
+          resultado = fatorial(a);
+          console.log(`Resultado: ${resultado}`);
+        } catch (e: any) {
+          console.log(`Erro: ${e.message}`);
+        }
+        break;
       default:
         console.log("Opção inválida.");
     }
@@ -81,7 +132,7 @@ async function main() {
       },
     ]);
     continuar = continuarResp;
-    console.log(); // Linha em branco para separar as execuções
+    console.log();
   }
   console.log("Calculadora encerrada.");
 }
